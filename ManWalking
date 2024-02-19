@@ -1,0 +1,91 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BoxyPerson : MonoBehaviour
+{
+    private GameObject torso;
+    public float moveSpeed = 5f;
+    private bool movingRight = true;
+    public float boundary = 5f;
+
+    // Body parts
+    private GameObject head;
+    private GameObject rightArm;
+    private GameObject leftArm;
+    private GameObject rightLeg;
+    private GameObject leftLeg;
+
+    // Movement variables
+    private float armSwingSpeed = 5f;
+    private float legSwingSpeed = 5f;
+
+    void Start()
+    {
+        // Torso
+        torso = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        torso.transform.position = new Vector3(0, 0, 0);
+        torso.transform.localScale = new Vector3(1.5f, 3, 1);
+
+        // Head
+        head = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        head.transform.position = new Vector3(0, 2.25f, 0);
+        head.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+        head.transform.parent = torso.transform;
+
+        // Right Arm
+        rightArm = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        rightArm.transform.position = new Vector3(-1.25f, 0.5f, 0);
+        rightArm.transform.localScale = new Vector3(0.5f, 2.5f, 0.5f);
+        rightArm.transform.parent = torso.transform;
+
+        // Left Arm
+        leftArm = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        leftArm.transform.position = new Vector3(1.25f, 0.5f, 0);
+        leftArm.transform.localScale = new Vector3(0.5f, 2.5f, 0.5f);
+        leftArm.transform.parent = torso.transform;
+
+        // Right Leg
+        rightLeg = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        rightLeg.transform.position = new Vector3(-0.5f, -2.25f, 0);
+        rightLeg.transform.localScale = new Vector3(0.5f, 2.5f, 0.5f);
+        rightLeg.transform.parent = torso.transform;
+
+        // Left Leg
+        leftLeg = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        leftLeg.transform.position = new Vector3(0.5f, -2.25f, 0);
+        leftLeg.transform.localScale = new Vector3(0.5f, 2.5f, 0.5f);
+        leftLeg.transform.parent = torso.transform;
+    }
+
+    void Update()
+    {
+        // Side to side movement
+        if (movingRight)
+        {
+            torso.transform.position += new Vector3(moveSpeed * Time.deltaTime, 0, 0);
+            if (torso.transform.position.x >= boundary)
+                movingRight = false;
+        }
+        else
+        {
+            torso.transform.position -= new Vector3(moveSpeed * Time.deltaTime, 0, 0);
+            if (torso.transform.position.x <= -boundary)
+                movingRight = true;
+        }
+
+        // Simulate walking by swinging arms and legs
+        float armSwing = Mathf.Cos(Time.time * armSwingSpeed) * 45; // Swing between -45 and 45 degrees
+        float legSwing = Mathf.Cos(Time.time * legSwingSpeed) * 45;
+
+        rightArm.transform.localRotation = Quaternion.Euler(armSwing, 0, 0);
+        leftArm.transform.localRotation = Quaternion.Euler(-armSwing, 0, 0);
+        rightLeg.transform.localRotation = Quaternion.Euler(-legSwing, 0, 0);
+        leftLeg.transform.localRotation = Quaternion.Euler(legSwing, 0, 0);
+    }
+}
+
+
+
+
+
