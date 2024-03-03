@@ -1,0 +1,28 @@
+using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+
+public class ThrowObject : MonoBehaviour
+{
+    private XRGrabInteractable grabInteractable;
+    private Rigidbody rigidBody;
+
+    void Start()
+    {
+        grabInteractable = GetComponent<XRGrabInteractable>();
+        rigidBody = GetComponent<Rigidbody>();
+
+        grabInteractable.onSelectExited.AddListener(ReleaseObject);
+    }
+
+    private void ReleaseObject(XRBaseInteractor interactor)
+    {
+        // Apply the interactor's velocity to the object when released
+        rigidBody.velocity = interactor.GetComponent<XRDirectInteractor>().velocity;
+        rigidBody.angularVelocity = interactor.GetComponent<XRDirectInteractor>().angularVelocity;
+    }
+
+    void OnDestroy()
+    {
+        grabInteractable.onSelectExited.RemoveListener(ReleaseObject);
+    }
+}
